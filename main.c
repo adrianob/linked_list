@@ -13,7 +13,7 @@ struct user{
 };
 
 bool cmp_produto(void *data){
-  return ((struct produto *)data)->codigo == 7;
+  return ((struct produto *)data)->codigo == 3;
 }
 bool produto_iterator(void *data){
   printf("codigo: %d preco:%.2f\n", ((struct produto*)data)->codigo, ((struct produto *)data)->preco);
@@ -46,11 +46,12 @@ int main(int argc, const char *argv[])
   append(&produtos, &prod);
   push(&produtos, &prod3);
   append(&produtos, &prod);
-  remove_all(&produtos, cmp_produto);
   iterator = produto_iterator;
   for_each(produtos, iterator);
   printf("%d\n", list_size(produtos));
+  remove_all(&produtos, cmp_produto);
   for_each_reverse(produtos, iterator);
+  printf("%d\n", list_size(produtos));
 
 
   push(&users, &user);

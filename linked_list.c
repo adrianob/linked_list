@@ -75,9 +75,6 @@ void destroy(LIST_NODE **head_ref){
 
 void remove_all(LIST_NODE **head_ref, filter filter ){
   LIST_NODE *aux = *head_ref;
-  if (!aux) {
-    return;
-  }
   while(aux){
     if (filter(aux->data)) {//remove
       if (!aux->prev) {//first element
