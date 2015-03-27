@@ -92,3 +92,13 @@ void remove_all(LIST_NODE **head_ref, filter filter ){
   }
 
 }
+
+int list_size(LIST_NODE *head){
+  unsigned int i = 0;
+  LIST_NODE *node = head;
+  while(node){
+    i++;
+    node = node->next;
+  }
+  return i;
+}
