@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include "linked_list.h"
 
 LIST_NODE * initialize(void){
@@ -73,10 +74,10 @@ void destroy(LIST_NODE **head_ref){
   *head_ref = NULL;
 }
 
-void remove_all(LIST_NODE **head_ref, filter filter ){
+void remove_all(LIST_NODE **head_ref, filter filter, void * filter_arg ){
   LIST_NODE *aux = *head_ref;
   while(aux){
-    if (filter(aux->data)) {//remove
+    if (filter(aux->data, filter_arg)) {//remove
       if (!aux->prev) {//first element
         *head_ref = aux->next;
       }

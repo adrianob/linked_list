@@ -7,55 +7,74 @@ struct produto{
   float preco;
 };
 
-struct user{
-  int codigo;
-  char *name;
-};
-
-bool cmp_produto(void *data){
-  return ((struct produto *)data)->codigo == 3;
+bool cmp_produto(void *data, void *n){
+  return ((struct produto *)data)->codigo == *((int *)n);
 }
+
 bool produto_iterator(void *data){
-  printf("codigo: %d preco:%.2f\n", ((struct produto*)data)->codigo, ((struct produto *)data)->preco);
+  printf("codigo: %d preco: %.2f\n", ((struct produto*)data)->codigo, ((struct produto *)data)->preco);
   return TRUE;
 }
 
-bool user_iterator(void *data){
-  printf("codigo: %d nome:%s\n", ((struct user*)data)->codigo, ((struct user *)data)->name);
-  return TRUE;
+void menu(){
+  printf("1. insere novo produto\n");
+  printf("2. lista todos produtos\n");
+  printf("3. lista todos produtos em ordem reversa\n");
+  printf("4. destroi a lista\n");
+  printf("5. imprimir tamanho da lista\n");
+  printf("6. remover elementos\n");
+  printf("7. sair\n");
+}
+
+void le_produto(LIST_NODE **head){
+  struct produto *prod;
+  prod = malloc(sizeof(struct produto));
+  printf("Informe o codigo:\n");
+  scanf("%d", &prod->codigo);
+  printf("Informe o preco:\n");
+  scanf("%f", &prod->preco);
+  push(head, prod);
 }
 
 int main(int argc, const char *argv[])
 {
-  struct produto prod, prod2, prod3;
-  struct user user;
+  int option, cod;
   iterator iterator;
 
-  prod2.codigo = 2;
-  prod3.codigo = 3;
-  prod.codigo = 4;
-  prod.preco = 5.4;
-  user.codigo = 2;
-  user.name = "teste";
-
   LIST_NODE *produtos = initialize();
-  LIST_NODE *users = initialize();
-
-  append(&produtos, &prod);
-  push(&produtos, &prod2);
-  append(&produtos, &prod);
-  push(&produtos, &prod3);
-  append(&produtos, &prod);
   iterator = produto_iterator;
-  for_each(produtos, iterator);
-  printf("%d\n", list_size(produtos));
-  remove_all(&produtos, cmp_produto);
-  for_each_reverse(produtos, iterator);
-  printf("%d\n", list_size(produtos));
+  menu();
 
+  while(TRUE){
+    scanf("%d", &option);
+    switch (option) {
+      case 1:
+        le_produto(&produtos);
+        break;
+      case 2:
+        for_each(produtos, iterator);
+        break;
+      case 3:
+        for_each_reverse(produtos, iterator);
+        break;
+      case 4:
+        destroy(&produtos);
+        break;
+      case 5:
+        printf("%d elementos\n", list_size(produtos));
+        break;
+      case 6:
+        printf("codigo a remover:\n");
+        scanf("%d", &cod);
+        remove_all(&produtos, cmp_produto, (void *) &cod);
+        break;
+      case 7:
+        exit(1);
+      default:
+        printf("opcao invalida\n");
+    }
+    printf("\n");
+    menu();
+  }
 
-  push(&users, &user);
-  push(&users, &user);
-  iterator = user_iterator;
-  for_each(users, iterator);
 }

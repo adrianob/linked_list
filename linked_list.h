@@ -3,7 +3,7 @@
 
 typedef enum {FALSE, TRUE} bool;
 typedef bool (*iterator)(void *);
-typedef bool (*filter)(void *);
+typedef bool (*filter)(void *, void *);
 
 typedef struct _list_node {
   void *data;
@@ -18,7 +18,7 @@ void append(LIST_NODE **head_ref, void *element);
 void for_each(LIST_NODE *head, iterator iterator);
 void for_each_reverse(LIST_NODE *head, iterator iterator);
 void destroy(LIST_NODE **head_ref);
-void remove_all(LIST_NODE **head_ref, filter filter );
+void remove_all(LIST_NODE **head_ref, filter filter, void * filter_arg );
 int list_size(LIST_NODE *head);
 
 #endif
