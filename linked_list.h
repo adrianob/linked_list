@@ -12,6 +12,7 @@ typedef struct _list_node {
 } LIST_NODE;
 
 LIST_NODE * initialize(void);
+LIST_NODE * last_node(LIST_NODE *head);
 void push(LIST_NODE **head_ref, void *element);
 void append(LIST_NODE **head_ref, void *element);
 void for_each(LIST_NODE *head, iterator iterator);

@@ -28,9 +28,7 @@ void append(LIST_NODE **head_ref, void *element){
     *head_ref = node;
   }
   else{
-    while(aux->next){
-      aux = aux->next;
-    }
+    aux = last_node(*head_ref);
     aux->next = node;
     node->prev = aux;
   }
@@ -44,16 +42,22 @@ void for_each(LIST_NODE *head, iterator iterator){
   }
 }
 
-void for_each_reverse(LIST_NODE *head, iterator iterator){
+LIST_NODE * last_node(LIST_NODE *head){
   LIST_NODE *node = head;
   if (node) {
     while(node->next){
       node = node->next;
-    }//node receives last element
-    while(node){
-      iterator(node->data);
-      node = node->prev;
     }
+  }
+  return node;
+}
+
+void for_each_reverse(LIST_NODE *head, iterator iterator){
+  LIST_NODE *node = head;
+  node = last_node(head);
+  while(node){
+    iterator(node->data);
+    node = node->prev;
   }
 }
 

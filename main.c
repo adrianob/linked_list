@@ -43,7 +43,9 @@ int main(int argc, const char *argv[])
 
   append(&produtos, &prod);
   push(&produtos, &prod2);
+  append(&produtos, &prod);
   push(&produtos, &prod3);
+  append(&produtos, &prod);
   remove_all(&produtos, cmp_produto);
   iterator = produto_iterator;
   for_each(produtos, iterator);
