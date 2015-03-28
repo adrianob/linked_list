@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include "linked_list.h"
+#include "circular_linked_list.h"
 
 LIST_NODE * initialize(void){
   return NULL;
@@ -9,11 +9,16 @@ LIST_NODE * initialize(void){
 void push(LIST_NODE **head_ref, void *element){
   LIST_NODE *node = malloc(sizeof(LIST_NODE));
   node->data = element;
-  node->prev = NULL;
-  node->next = *head_ref;
 
-  if (*head_ref) {
-    node->next->prev = node;
+  if (!*head_ref) {//empty
+    node->next = node;
+    node->prev = node;
+  }
+  else{
+    node->next = *head_ref;
+    node->prev = node->next->prev;//previous points to last element
+    node->next->prev->next = node;//last element points to new head
+    node->next->prev = node;//next element points to new head
   }
   *head_ref = node;
 }
@@ -23,14 +28,16 @@ void append(LIST_NODE **head_ref, void *element){
   LIST_NODE *aux = *head_ref;
   node->data = element;
 
-  node->next = NULL;
   if (!aux) {//empty list
-    node->prev = NULL;
+    node->prev = node;
+    node->next = node;
     *head_ref = node;
   }
   else{
     aux = last_node(*head_ref);
     aux->next = node;
+    (*head_ref)->prev = node;
+    node->next = *head_ref;
     node->prev = aux;
   }
 }
@@ -39,18 +46,8 @@ void for_each(LIST_NODE *head, iterator iterator){
   LIST_NODE *node = head;
   while(node){
     iterator(node->data);
-    node = node->next;
+    node = (node->next != head) ? node->next : NULL;
   }
-}
-
-LIST_NODE * last_node(LIST_NODE *head){
-  LIST_NODE *node = head;
-  if (node) {
-    while(node->next){
-      node = node->next;
-    }
-  }
-  return node;
 }
 
 void for_each_reverse(LIST_NODE *head, iterator iterator){
@@ -58,16 +55,17 @@ void for_each_reverse(LIST_NODE *head, iterator iterator){
   node = last_node(head);
   while(node){
     iterator(node->data);
-    node = node->prev;
+    node = (node == head) ? NULL : node->prev;
   }
 }
 
 void destroy(LIST_NODE **head_ref){
   LIST_NODE *aux = *head_ref;
+  LIST_NODE *head = *head_ref;
 
   while(*head_ref){
     aux = *head_ref;
-    *head_ref = aux->next;
+    *head_ref = (aux->next == head) ? NULL : aux->next;
     free(aux);
   }
   free(*head_ref);
@@ -76,21 +74,25 @@ void destroy(LIST_NODE **head_ref){
 
 void remove_all(LIST_NODE **head_ref, filter filter, void * filter_arg ){
   LIST_NODE *aux = *head_ref;
+  LIST_NODE *tail = last_node(*head_ref);
   while(aux){
     if (filter(aux->data, filter_arg)) {//remove
-      if (!aux->prev) {//first element
-        *head_ref = aux->next;
+      if (aux == *head_ref) {//first element
+        *head_ref = (aux->next == aux) ? NULL : aux->next;
+        if (*head_ref) {
+          tail->next = *head_ref;
+        }
       }
       else {
         aux->prev->next = aux->next;
       }
-      if (aux->next) {
-        aux->next->prev = aux->prev;
-      }
+      aux->next->prev = aux->prev;
+
       free(aux);
     }
 
-    aux = aux->next;
+    tail = last_node(*head_ref);
+    aux = (*head_ref && aux != tail) ? aux->next : NULL;
   }
 
 }
@@ -100,7 +102,15 @@ int list_size(LIST_NODE *head){
   LIST_NODE *node = head;
   while(node){
     i++;
-    node = node->next;
+    node = (node->next == head) ? NULL : node->next;
   }
   return i;
+}
+
+LIST_NODE * last_node(LIST_NODE *head){
+  LIST_NODE *node = head;
+  if (node) {
+    node = node->prev;
+  }
+  return node;
 }

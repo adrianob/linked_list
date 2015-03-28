@@ -1,14 +1,35 @@
 #include <stdio.h>
+#include <time.h>
 #include <stdlib.h>
-#include "linked_list.h"
+#include "circular_linked_list.h"
 
 struct produto{
   int codigo;
   float preco;
 };
 
-bool cmp_produto(void *data, void *n){
+void random_list(LIST_NODE **head_ref, int size){
+  int i;
+  struct produto *prod;
+  for (i = 0; i < size; i++) {
+    prod = malloc(sizeof(struct produto));
+    prod->codigo = i;
+    prod->preco = rand();
+    push(head_ref, prod);
+  }
+
+}
+
+bool produto_equal(void *data, void *n){
   return ((struct produto *)data)->codigo == *((int *)n);
+}
+
+bool produto_greater(void *data, void *n){
+  return ((struct produto *)data)->codigo > *((int *)n);
+}
+
+bool produto_less(void *data, void *n){
+  return ((struct produto *)data)->codigo < *((int *)n);
 }
 
 bool produto_iterator(void *data){
@@ -23,7 +44,14 @@ void menu(){
   printf("4. destroi a lista\n");
   printf("5. imprimir tamanho da lista\n");
   printf("6. remover elementos\n");
-  printf("7. sair\n");
+  printf("7. criar lista aleatoria\n");
+  printf("8. sair\n");
+}
+
+void menu_destroy(){
+  printf("1. remove com valor igual\n");
+  printf("2. remove com valor maior\n");
+  printf("3. remove com valor menor\n");
 }
 
 void le_produto(LIST_NODE **head){
@@ -38,11 +66,13 @@ void le_produto(LIST_NODE **head){
 
 int main(int argc, const char *argv[])
 {
-  int option, cod;
+  srand(time(NULL));
+  int option, cod, cod_destroy;
   iterator iterator;
 
   LIST_NODE *produtos = initialize();
   iterator = produto_iterator;
+  filter filter;
   menu();
 
   while(TRUE){
@@ -64,11 +94,31 @@ int main(int argc, const char *argv[])
         printf("%d elementos\n", list_size(produtos));
         break;
       case 6:
-        printf("codigo a remover:\n");
+        menu_destroy();
+        scanf("%d", &cod_destroy);
+        printf("valor:\n");
         scanf("%d", &cod);
-        remove_all(&produtos, cmp_produto, (void *) &cod);
+        switch (cod_destroy) {
+          case 1:
+            filter = produto_equal;
+            break;
+          case 2:
+            filter = produto_greater;
+            break;
+          case 3:
+            filter = produto_less;
+            break;
+          default:
+            exit(1);
+        }
+        remove_all(&produtos, filter, (void *) &cod);
         break;
       case 7:
+        printf("quantidade de elementos:\n");
+        scanf("%d", &cod);
+        random_list(&produtos, cod);
+        break;
+      case 8:
         exit(1);
       default:
         printf("opcao invalida\n");
