@@ -8,7 +8,6 @@ typedef bool (*filter)(void *, void *);
 typedef struct _list_node {
   void *data;
   struct _list_node *next;
-  struct _list_node *prev;
 } LIST_NODE;
 
 LIST_NODE * initialize(void);

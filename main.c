@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <time.h>
 #include <stdlib.h>
-#include "doubly_linked_list.h"
+#include "singly_linked_list.h"
 
 void random_list(LIST_NODE **head_ref, int size);
 bool produto_equal(void *data, void *n);
@@ -21,7 +21,7 @@ void random_list(LIST_NODE **head_ref, int size){
   int i;
   struct produto *prod;
   for (i = 0; i < size; i++) {
-    prod = malloc(sizeof(struct produto));
+    prod = (struct produto *) malloc(sizeof(struct produto));
     prod->codigo = i;
     prod->preco = rand();
     push(head_ref, prod);
@@ -65,7 +65,7 @@ void menu_destroy(void){
 
 void le_produto(LIST_NODE **head){
   struct produto *prod;
-  prod = malloc(sizeof(struct produto));
+  prod = (struct produto *)malloc(sizeof(struct produto));
   printf("Informe o codigo:\n");
   scanf("%d", &prod->codigo);
   printf("Informe o preco:\n");
