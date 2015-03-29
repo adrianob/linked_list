@@ -68,6 +68,7 @@ void destroy(LIST_NODE **head_ref){
   while(*head_ref){
     aux = *head_ref;
     *head_ref = aux->next;
+    free(aux->data);
     free(aux);
     aux = NULL;
   }
@@ -90,6 +91,7 @@ void remove_all(LIST_NODE **head_ref, filter filter, void * filter_arg ){
       if (aux->next) {
         aux->next->prev = aux->prev;
       }
+      free(aux->data);
       free(aux);
       aux = NULL;
     }

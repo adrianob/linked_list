@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <time.h>
 #include <stdlib.h>
-#include "singly_linked_list.h"
+#include "doubly_linked_list.h"
 
 void random_list(LIST_NODE **head_ref, int size);
 bool produto_equal(void *data, void *n);
