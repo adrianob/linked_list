@@ -1,7 +1,16 @@
 #include <stdio.h>
 #include <time.h>
 #include <stdlib.h>
-#include "circular_linked_list.h"
+#include "doubly_linked_list.h"
+
+void random_list(LIST_NODE **head_ref, int size);
+bool produto_equal(void *data, void *n);
+bool produto_greater(void *data, void *n);
+bool produto_less(void *data, void *n);
+bool produto_iterator(void *data);
+void menu(void);
+void menu_destroy(void);
+void le_produto(LIST_NODE **head);
 
 struct produto{
   int codigo;
@@ -37,7 +46,7 @@ bool produto_iterator(void *data){
   return TRUE;
 }
 
-void menu(){
+void menu(void){
   printf("1. insere novo produto\n");
   printf("2. lista todos produtos\n");
   printf("3. lista todos produtos em ordem reversa\n");
@@ -48,7 +57,7 @@ void menu(){
   printf("8. sair\n");
 }
 
-void menu_destroy(){
+void menu_destroy(void){
   printf("1. remove com valor igual\n");
   printf("2. remove com valor maior\n");
   printf("3. remove com valor menor\n");
@@ -64,7 +73,7 @@ void le_produto(LIST_NODE **head){
   push(head, prod);
 }
 
-int main(int argc, const char *argv[])
+int main(void)
 {
   srand(time(NULL));
   int option, cod, cod_destroy;
