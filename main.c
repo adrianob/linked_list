@@ -29,6 +29,10 @@ void random_list(LIST_NODE **head_ref, int size){
 
 }
 
+bool asc(void *data1, void *data2){
+  return ((struct produto *)data1)->preco < ((struct produto *)data2)->preco;
+}
+
 bool produto_equal(void *data, void *n){
   return ((struct produto *)data)->codigo == *((int *)n);
 }
@@ -54,7 +58,8 @@ void menu(void){
   printf("5. imprimir tamanho da lista\n");
   printf("6. remover elementos\n");
   printf("7. criar lista aleatoria\n");
-  printf("8. sair\n");
+  printf("8. ordenar por preco\n");
+  printf("9. sair\n");
 }
 
 void menu_destroy(void){
@@ -78,10 +83,10 @@ int main(void)
   srand(time(NULL));
   int option, cod, cod_destroy;
   iterator iterator;
+  filter filter;
 
   LIST_NODE *produtos = initialize();
   iterator = produto_iterator;
-  filter filter;
   menu();
 
   while(TRUE){
@@ -128,6 +133,9 @@ int main(void)
         random_list(&produtos, cod);
         break;
       case 8:
+        sort(&produtos, asc);
+        break;
+      case 9:
         exit(1);
       default:
         printf("opcao invalida\n");
