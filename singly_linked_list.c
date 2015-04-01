@@ -6,6 +6,28 @@ LIST_NODE * initialize(void){
   return NULL;
 }
 
+void swap(LIST_NODE **node1, LIST_NODE **node2){
+  void *data = (*node2)->data;
+  (*node2)->data = (*node1)->data;
+  (*node1)->data = data;
+}
+
+void sort(LIST_NODE **head_ref, filter filter){
+  LIST_NODE *current = (*head_ref);
+  bool finished = FALSE;
+  while(!finished){
+    finished = TRUE;
+    while(current->next){
+      if (filter(current->data, current->next->data)) {
+        swap(&current, &current->next);
+        finished = FALSE;
+      }
+      current = current->next;
+    }
+    current = (*head_ref);
+  }
+}
+
 void push(LIST_NODE **head_ref, void *element){
   LIST_NODE *node = (LIST_NODE *) malloc(sizeof(LIST_NODE));
   node->data = element;
@@ -20,7 +42,7 @@ void append(LIST_NODE **head_ref, void *element){
   node->data = element;
   node->next = NULL;
 
-  if (*head_ref) {
+  if (!*head_ref) {
     *head_ref = node;
   }
   else{

@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <time.h>
 #include <stdlib.h>
-#include "doubly_linked_list.h"
+#include "singly_linked_list.h"
 
 void random_list(LIST_NODE **head_ref, int size);
 bool produto_equal(void *data, void *n);
@@ -10,7 +10,8 @@ bool produto_less(void *data, void *n);
 bool produto_iterator(void *data);
 void menu(void);
 void menu_destroy(void);
-void le_produto(LIST_NODE **head);
+struct produto * le_produto(LIST_NODE **head);
+bool asc(void *data1, void *data2);
 
 struct produto{
   int codigo;
@@ -24,13 +25,13 @@ void random_list(LIST_NODE **head_ref, int size){
     prod = (struct produto *) malloc(sizeof(struct produto));
     prod->codigo = i;
     prod->preco = rand();
-    push(head_ref, prod);
+    append(head_ref, prod);
   }
 
 }
 
 bool asc(void *data1, void *data2){
-  return ((struct produto *)data1)->preco < ((struct produto *)data2)->preco;
+  return ((struct produto *)data1)->preco > ((struct produto *)data2)->preco;
 }
 
 bool produto_equal(void *data, void *n){
@@ -58,7 +59,7 @@ void menu(void){
   printf("5. imprimir tamanho da lista\n");
   printf("6. remover elementos\n");
   printf("7. criar lista aleatoria\n");
-  printf("8. ordenar por preco\n");
+  printf("8. ordena\n");
   printf("9. sair\n");
 }
 
@@ -68,20 +69,21 @@ void menu_destroy(void){
   printf("3. remove com valor menor\n");
 }
 
-void le_produto(LIST_NODE **head){
+struct produto * le_produto(LIST_NODE **head){
   struct produto *prod;
   prod = (struct produto *)malloc(sizeof(struct produto));
   printf("Informe o codigo:\n");
   scanf("%d", &prod->codigo);
   printf("Informe o preco:\n");
   scanf("%f", &prod->preco);
-  push(head, prod);
+  return prod;
 }
 
 int main(void)
 {
   srand(time(NULL));
   int option, cod, cod_destroy;
+  struct produto * prod;
   iterator iterator;
   filter filter;
 
@@ -93,7 +95,8 @@ int main(void)
     scanf("%d", &option);
     switch (option) {
       case 1:
-        le_produto(&produtos);
+        prod = le_produto(&produtos);
+        push(&produtos, prod);
         break;
       case 2:
         for_each(produtos, iterator);

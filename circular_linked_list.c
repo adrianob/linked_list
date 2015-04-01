@@ -105,6 +105,42 @@ void remove_all(LIST_NODE **head_ref, filter filter, void * filter_arg ){
 
 }
 
+void insert_ordered(LIST_NODE **head_ref, void *element, filter filter){
+  LIST_NODE *node = malloc(sizeof(LIST_NODE));
+  LIST_NODE *aux = *head_ref;
+  LIST_NODE *next = NULL;
+  node->data = element;
+  bool found = FALSE;
+
+  if (!aux) {//empty list
+    node->prev = node;
+    node->next = node;
+    *head_ref = node;
+  }
+  else if (!filter(aux->data, element)) {
+    push(head_ref, element);
+  }
+  else{
+    while (filter(aux->data, element)) {
+      if (aux->next == *head_ref) {
+        found = TRUE;
+        break;
+      }
+      aux = aux->next;
+    }
+    if (!found) {
+      aux = aux->prev;
+    }
+
+    next = aux->next;
+    aux->next = node;
+    node->next = next;
+    node->next->prev = node;
+    node->prev = aux;
+  }
+
+}
+
 int list_size(LIST_NODE *head){
   unsigned int i = 0;
   LIST_NODE *node = head;

@@ -19,5 +19,7 @@ void for_each_reverse(LIST_NODE *head, iterator iterator);
 void destroy(LIST_NODE **head_ref);
 void remove_all(LIST_NODE **head_ref, filter filter, void * filter_arg );
 int list_size(LIST_NODE *head);
+void sort(LIST_NODE **head_ref, filter filter);
+void swap(LIST_NODE **node1, LIST_NODE **node2);
 
 #endif
